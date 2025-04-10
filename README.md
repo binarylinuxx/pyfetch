@@ -44,3 +44,73 @@ info_color = white
 label_color = yellow
 title_color = magenta
 ```
+
+# AND WHAT ABOUT CUSTOM ASCII ARTS?
+
+CURRENTLY 3 ASSETS READY FOR YOU:
+---------------------------------
+
+**CAT**
+![cat](cat.png)
+
+**TUX**
+![tux](tux.png)
+
+**AND THE FAMILIAR PYTHON**
+![fetch1](fetch.png)
+
+**CUSTOM**
+CUSTOM ASCII WILL REQUIRE SOME PYTHON SKILLS AND RECOMPIE EVERY TIME YOU ADDING NEW
+
+> [!IMPORTANT]
+> RECOMPILE PROCESS ONLY WITH **MAKE** PKGBUILD ARE FETCH CURRENT EXIST SETUP
+
+SO GO TO YOUR DIR WITH CLONED pyfetch
+EDIT: **pyfecth** 
+FIND SECTION WITH FUNCTION **get_ascii_art**
+```
+def get_ascii_art(config):
+    """Get ASCII art with perfect alignment"""
+    style = config['ascii'].get('art_style', 'tux')
+    custom_art = config['ascii'].get('custom_art', '').strip()
+    
+    if custom_art:
+        return custom_art
+    
+    custom_path = config['ascii'].get('custom_art_path', '')
+    if custom_path:
+        try:
+            with open(os.path.expanduser(custom_path), 'r') as f:
+                return f.read().strip()
+        except Exception as e:
+            print(f"Error loading custom art: {e}", file=sys.stderr)
+    
+    # Built-in arts
+    builtin_arts = {
+        'tux': r"""
+   .--.   
+  |o_o |  
+  |:_/ |  
+ //   \ \ 
+(|     | )
+/'\_   _/`\
+\___)=(___/""",
+        'cat': r"""
+  /\_/\  
+ ( o.o ) 
+  > ^ <  
+ /  _  \ 
+(____|____)""",
+        'pyfetch': r"""
+     ----    
+    |*   |_____
+  __|___       |
+ |       ______|
+ |_____|  *|   
+       |___|""", #ENSURE IT END UP WITH "," SYMBOL
+        'example': r""" #HERE IS NAME OF FUNCTION OF YOUR ASCII
+        Hello! #FOR EXAMPLE HERE IM TYPED Hello! BUT YOU CAN ADD WHATEVER ASCII YOU WANT BUT DO NOT FORGET IT DESIGNED FOR SMALL ARTS
+        """ #END OF FUNCTION OF YOUR ASCII
+    }
+    return builtin_arts.get(style, builtin_arts['tux'])
+```
