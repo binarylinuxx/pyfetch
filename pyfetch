@@ -3,6 +3,7 @@ import platform
 import os
 import socket
 import psutil
+import GPUtil
 from datetime import datetime
 import configparser
 from pathlib import Path
@@ -143,35 +144,20 @@ def get_memory_usage():
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
-def get_gpu_info():
-    """Get clean AMD Radeon GPU identification without duplicates"""
-    try:
-        # Method 1: Check sysfs first
-        amd_sysfs_path = '/sys/class/drm/card0/device/product_name'
-        if os.path.exists(amd_sysfs_path):
-            with open(amd_sysfs_path, 'r') as f:
-                gpu_name = f.read().strip()
-                if 'Radeon RX' in gpu_name:
-                    clean_name = gpu_name.replace('(TM)', '').replace('(R)', '').strip()
-                    # Remove duplicate model numbers
-                    if '/' in clean_name:
-                        base_model = clean_name.split('/')[0]
-                        return base_model.split('RX')[0] + 'RX ' + base_model.split('RX')[1].split()[0]
-                    return clean_name
+gpus = GPUtil.getGPUs()
+gpus = []
 
-        # Method 2: Parse lspci output
-        if shutil.which('lspci'):
-            lspci_output = os.popen('lspci -vnn | grep -i "Radeon RX"').read()
-            if lspci_output:
-                clean_line = lspci_output.split('Radeon RX')[-1].split('[')[0].strip()
-                # Take just the first model number if multiple listed
-                model = clean_line.split()[0].split('/')[0]
-                return f"AMD Radeon RX {model}"
+for gpu in gpus:
+    gpu_name = gpu.name
+    
+    gpus.append((gpu_name))
+
+def get_gpu_info():
+    try:
+                gpu_name = list_gpu
 
     except Exception as e:
         print(f"Error getting GPU info: {e}", file=sys.stderr)
-    
-    return "AMD Graphics"
     
 def print_title(config, width):
     title = "PyFetch - System Information"
