@@ -107,10 +107,37 @@ def get_ascii_art(config):
   __|___       |
  |       ______|
  |_____|  *|   
-       |___|""", #ENSURE IT END UP WITH "," SYMBOL
+       |___|""", #ENSURE PREVIUS ASCII BEFORE YOU CREATED END UP WITH "," SYMBOL
         'example': r""" #HERE IS NAME OF FUNCTION OF YOUR ASCII
         Hello! #FOR EXAMPLE HERE IM TYPED Hello! BUT YOU CAN ADD WHATEVER ASCII YOU WANT BUT DO NOT FORGET IT DESIGNED FOR SMALL ARTS
         """ #END OF FUNCTION OF YOUR ASCII
     }
     return builtin_arts.get(style, builtin_arts['tux'])
 ```
+
+AFTER YOU DEFINED YOUR NEW ASCII ARTS GO AND EDIT **~/.config/pyfetch/config.ini** AND MAKE IT LOOK LIKE
+```
+[display]
+show_host = true
+show_os = true
+show_kernel = true
+show_uptime = true
+show_cpu = true
+show_memory = true
+show_gpu = false
+show_shell = true
+
+[ascii]
+art_style = NAME_OF_YOUR_OWN_ASCII
+
+color = blue
+custom_art_path =
+art_width = 11
+
+[format]
+info_prefix =
+info_color = white
+label_color = yellow
+title_color = magenta
+```
+NOW YOU CAN ENJOY YOUR CUSTOM ASCII YAY!
