@@ -35,7 +35,6 @@ show_shell = true
 
 [ascii] #HERE YOU CAN CHANGE COLOR OF OUTPUT LOGO AND IMPORT CUSTOM ASCII
 art_style = pyfetch
-custom_art =
 color = blue
 
 [format] #COLORS
@@ -60,13 +59,13 @@ CURRENTLY 3 ASSETS READY FOR YOU:
 ![fetch1](fetch.png)
 
 **CUSTOM**
-CUSTOM ASCII WILL REQUIRE SOME PYTHON SKILLS AND RECOMPIE EVERY TIME YOU ADDING NEW
+CUSTOM ASCII WILL REQUIRE SOME PYTHON SKILLS TO EDIT THE SOURCES AND RECOMPIE EVERY TIME YOU ADDING NEW
 
 > [!IMPORTANT]
 > RECOMPILE PROCESS ONLY WITH **MAKE** PKGBUILD ARE FETCH CURRENT EXIST SETUP
 
 SO GO TO YOUR DIR WITH CLONED pyfetch
-EDIT: **pyfecth** 
+EDIT: **pyfecth** MAIN CODE NOT THE CONFIG
 FIND SECTION WITH FUNCTION **get_ascii_art**
 ```
 def get_ascii_art(config):
@@ -115,7 +114,13 @@ def get_ascii_art(config):
     return builtin_arts.get(style, builtin_arts['tux'])
 ```
 
-AFTER YOU DEFINED YOUR NEW ASCII ARTS GO AND EDIT **~/.config/pyfetch/config.ini** AND MAKE IT LOOK LIKE
+**RECOMPILE**
+```
+~/pyfetch/
+$ sudo make install
+```
+
+AFTER YOU DEFINED YOUR NEW ASCII ARTS AND RECOMPILED GO AND EDIT **~/.config/pyfetch/config.ini** AND MAKE IT LOOK LIKE
 ```
 [display]
 show_host = true
@@ -129,9 +134,7 @@ show_shell = true
 
 [ascii]
 art_style = NAME_OF_YOUR_OWN_ASCII
-
 color = blue
-custom_art_path =
 art_width = 11
 
 [format]
