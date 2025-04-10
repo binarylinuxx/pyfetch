@@ -51,7 +51,7 @@ title_color = magenta
 
 # AND WHAT ABOUT CUSTOM ASCII ARTS?
 
-CURRENTLY 3 ASSETS READY FOR YOU:
+CURRENTLY 4 ASSETS READY FOR YOU:
 ---------------------------------
 
 **CAT**
@@ -59,6 +59,9 @@ CURRENTLY 3 ASSETS READY FOR YOU:
 
 **TUX**
 ![tux](tux.png)
+
+**PYTHON CAT**
+![cat_py](cat_py.png)
 
 **AND THE FAMILIAR PYTHON**
 ![fetch1](fetch.png)
