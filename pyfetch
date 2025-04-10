@@ -9,59 +9,106 @@ from pathlib import Path
 from colorama import Fore, Style, init
 import sys
 import pwd
+import argparse
+import shutil
 
 # Initialize colorama
 init()
 
 def colorize(text, color):
-    """Apply color to text using colorama"""
+    """Colorize text using colorama"""
     colors = {
-        'red': Fore.RED,
-        'green': Fore.GREEN,
-        'yellow': Fore.YELLOW,
-        'blue': Fore.BLUE,
-        'magenta': Fore.MAGENTA,
-        'cyan': Fore.CYAN,
-        'white': Fore.WHITE,
-        'black': Fore.BLACK
+        'red': Fore.RED, 'green': Fore.GREEN, 'yellow': Fore.YELLOW,
+        'blue': Fore.BLUE, 'magenta': Fore.MAGENTA, 'cyan': Fore.CYAN,
+        'white': Fore.WHITE, 'black': Fore.BLACK
     }
     return f"{colors.get(color.lower(), '')}{text}{Style.RESET_ALL}"
 
 def load_config():
-    """Load configuration from INI file"""
+    """Load configuration from INI files"""
     config = configparser.ConfigParser()
     
+    # Default configuration
     config['display'] = {
-        'show_username': 'true',
-        'show_host': 'true',
-        'show_os': 'true',
-        'show_kernel': 'true',
-        'show_uptime': 'true',
-        'show_cpu': 'true',
-        'show_memory': 'true',
-        'show_shell': 'true',
+        'show_username': 'true', 'show_host': 'true',
+        'show_os': 'true', 'show_kernel': 'true',
+        'show_uptime': 'true', 'show_cpu': 'true',
+        'show_memory': 'true', 'show_shell': 'true',
         'show_python': 'true'
     }
     
     config['ascii'] = {
-        'art_style': 'pyfetch',
-        'color': 'cyan'
+        'art_style': 'tux',
+        'color': 'blue',
+        'art_width': '11'
     }
     
     config['format'] = {
-        'info_prefix': '',
+        'info_prefix': '',
         'info_color': 'white',
         'label_color': 'yellow',
         'title_color': 'magenta',
         'max_width': '60'
     }
     
-    # Load config
-    config_path = os.path.join(Path.home(), '.config', 'pyfetch', 'config.ini')
-    if os.path.exists(config_path):
-        config.read(config_path)
+    # Config file paths
+    config_paths = [
+        os.path.join(Path.home(), '.config', 'pyfetch', 'config.ini'),
+        '/etc/pyfetch/config.ini',
+        os.path.join(os.path.dirname(__file__), 'pyfetch_config.ini')
+    ]
+    
+    for path in config_paths:
+        if os.path.exists(path):
+            config.read(path)
+            break
     
     return config
+
+def get_ascii_art(config):
+    """Get ASCII art with perfect alignment"""
+    style = config['ascii'].get('art_style', 'tux')
+    custom_art = config['ascii'].get('custom_art', '').strip()
+    
+    if custom_art:
+        return custom_art
+    
+    custom_path = config['ascii'].get('custom_art_path', '')
+    if custom_path:
+        try:
+            with open(os.path.expanduser(custom_path), 'r') as f:
+                return f.read().strip()
+        except Exception as e:
+            print(f"Error loading custom art: {e}", file=sys.stderr)
+    
+    # Built-in arts
+    builtin_arts = {
+        'tux': r"""
+   .--.   
+  |o_o |  
+  |:_/ |  
+ //   \ \ 
+(|     | )
+/'\_   _/`\
+\___)=(___/""",
+        'cat': r"""
+  /\_/\  
+ ( o.o ) 
+  > ^ <  
+ /  _  \ 
+(____|____)""",
+        'pyfetch': r"""
+     ----    
+    |*   |_____
+  __|___       |
+ |       ______|
+ |_____|  *|   
+       |___|""",
+        'example': r"""
+        Hello!
+        """
+    }
+    return builtin_arts.get(style, builtin_arts['tux'])
 
 def get_username():
     """Get current username"""
@@ -71,32 +118,11 @@ def get_username():
         return os.getlogin()
 
 def get_kernel():
-    """Get kernel version - cleaned up format"""
+    """Get cleaned kernel version"""
     version = platform.uname().release
     if "SMP" in version:
         return version.split("SMP")[0] + "SMP"
-    elif "#" in version:
-        return version.split("#")[0] + "#" + version.split("#")[1].split()[0]
-    return version
-
-def get_cpu_info():
-    """Get cleaned up CPU information"""
-    try:
-        with open('/proc/cpuinfo', 'r') as f:
-            for line in f:
-                if 'model name' in line.lower():
-                    # Clean up CPU string
-                    cpu = line.split(':')[1].strip()
-                    # Remove unnecessary details
-                    cpu = cpu.replace('(R)', '').replace('(TM)', '')
-                    cpu = cpu.replace('CPU', '').strip()
-                    # Shorten if too long
-                    if len(cpu) > 30:
-                        cpu = ' '.join(cpu.split()[:4]) + '...'
-                    return cpu
-    except:
-        pass
-    return platform.processor() or "Unknown"
+    return version.split("#")[0] + "#" + version.split("#")[1].split()[0] if "#" in version else version
 
 def get_os_info():
     """Get OS information"""
@@ -114,55 +140,66 @@ def get_uptime():
     mins = rem // 60
     return f"{days}d {hours}h {mins}m" if days else f"{hours}h {mins}m"
 
+def get_cpu_info():
+    """Get cleaned CPU information"""
+    try:
+        with open('/proc/cpuinfo', 'r') as f:
+            for line in f:
+                if 'model name' in line.lower():
+                    cpu = line.split(':')[1].strip()
+                    return cpu.replace('(R)', '').replace('(TM)', '').replace('CPU', '').strip()
+    except:
+        pass
+    return platform.processor() or "Unknown"
+
 def get_memory_usage():
-    """Get memory usage percentage"""
+    """Get memory usage with GB values"""
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
+def print_title(config, width):
+    """Print formatted title"""
+    title = "PyFetch - System Information"
+    print(colorize(f"\n{title.center(width, ' ')}\n", config['format']['title_color']))
+    print(colorize("-" * width, config['format']['title_color']))
+
 def main():
     config = load_config()
-    max_width = int(config['format']['max_width'])
+    max_width = int(config['format'].get('max_width', '60'))
     
-    # Title
-    title = "PyFetch - System Information"
-    print(colorize(f"\n{title.center(max_width, ' ')}\n", config['format']['title_color']))
-    print(colorize("-" * max_width, config['format']['title_color']))
+    # Print title
+    print_title(config, max_width)
     
-    # System info
+    # Collect system info
     info = {}
-    if config['display'].getboolean('show_username'):
+    if config['display'].getboolean('show_username', True):
         info["Username"] = get_username()
-    if config['display'].getboolean('show_host'):
+    if config['display'].getboolean('show_host', True):
         info["Host"] = socket.gethostname()
-    if config['display'].getboolean('show_os'):
+    if config['display'].getboolean('show_os', True):
         info["OS"] = get_os_info()
-    if config['display'].getboolean('show_kernel'):
+    if config['display'].getboolean('show_kernel', True):
         info["Kernel"] = get_kernel()
-    if config['display'].getboolean('show_uptime'):
+    if config['display'].getboolean('show_uptime', True):
         info["Uptime"] = get_uptime()
-    if config['display'].getboolean('show_cpu'):
+    if config['display'].getboolean('show_cpu', True):
         info["CPU"] = get_cpu_info()
-    if config['display'].getboolean('show_memory'):
+    if config['display'].getboolean('show_memory', True):
         info["Memory"] = get_memory_usage()
-    if config['display'].getboolean('show_shell'):
+    if config['display'].getboolean('show_shell', True):
         info["Shell"] = os.path.basename(os.getenv('SHELL', 'unknown'))
-    if config['display'].getboolean('show_python'):
+    if config['display'].getboolean('show_python', True):
         info["Python"] = f"{platform.python_implementation()} {platform.python_version()}"
     
-    # ASCII art
-    ascii_art = r"""
-     ----
-    |*   |_____
-  _____        |
- |       ______|
- |_____|  *|
-       |___|
-    """.split('\n')
+    # Get and format ASCII art
+    ascii_art = get_ascii_art(config).split('\n')
+    art_width = int(config['ascii'].get('art_width', '11'))
     
-    # Display
+    # Display with perfect alignment
     for i, (key, value) in enumerate(info.items()):
         art_line = ascii_art[i] if i < len(ascii_art) else ""
-        line = f"{art_line.ljust(20)} {config['format']['info_prefix']}{colorize(key, config['format']['label_color'])}: {colorize(value, config['format']['info_color'])}"
+        padding = max(art_width + 2, 11)  # Minimum padding
+        line = f"{art_line.ljust(padding)} {config['format']['info_prefix']}{colorize(key, config['format']['label_color'])}: {colorize(value, config['format']['info_color'])}"
         print(line)
 
 if __name__ == "__main__":
