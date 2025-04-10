@@ -61,7 +61,7 @@ CURRENTLY 4 ASSETS READY FOR YOU:
 ![tux](tux.png)
 
 **PYTHON CAT**
-![cat_py](cat_py.png)
+![catt_py](cat_py.png)
 
 **AND THE FAMILIAR PYTHON**
 ![fetch1](fetch.png)
