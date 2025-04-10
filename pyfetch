@@ -16,7 +16,6 @@ import shutil
 init()
 
 def colorize(text, color):
-    """Colorize text using colorama"""
     colors = {
         'red': Fore.RED, 'green': Fore.GREEN, 'yellow': Fore.YELLOW,
         'blue': Fore.BLUE, 'magenta': Fore.MAGENTA, 'cyan': Fore.CYAN,
@@ -25,24 +24,19 @@ def colorize(text, color):
     return f"{colors.get(color.lower(), '')}{text}{Style.RESET_ALL}"
 
 def load_config():
-    """Load configuration from INI files"""
     config = configparser.ConfigParser()
-    
-    # Default configuration
     config['display'] = {
         'show_username': 'true', 'show_host': 'true',
         'show_os': 'true', 'show_kernel': 'true',
         'show_uptime': 'true', 'show_cpu': 'true',
-        'show_memory': 'true', 'show_shell': 'true',
-        'show_python': 'true'
+        'show_memory': 'true', 'show_gpu': 'true',
+        'show_shell': 'true', 'show_python': 'true'
     }
-    
     config['ascii'] = {
-        'art_style': 'tux',
+        'art_style': 'cat',
         'color': 'blue',
         'art_width': '11'
     }
-    
     config['format'] = {
         'info_prefix': '',
         'info_color': 'white',
@@ -51,28 +45,22 @@ def load_config():
         'max_width': '60'
     }
     
-    # Config file paths
     config_paths = [
         os.path.join(Path.home(), '.config', 'pyfetch', 'config.ini'),
         '/etc/pyfetch/config.ini',
         os.path.join(os.path.dirname(__file__), 'pyfetch_config.ini')
     ]
-    
     for path in config_paths:
         if os.path.exists(path):
             config.read(path)
             break
-    
     return config
 
 def get_ascii_art(config):
-    """Get ASCII art with perfect alignment"""
-    style = config['ascii'].get('art_style', 'tux')
+    style = config['ascii'].get('art_style', 'cat')
     custom_art = config['ascii'].get('custom_art', '').strip()
-    
     if custom_art:
         return custom_art
-    
     custom_path = config['ascii'].get('custom_art_path', '')
     if custom_path:
         try:
@@ -81,8 +69,13 @@ def get_ascii_art(config):
         except Exception as e:
             print(f"Error loading custom art: {e}", file=sys.stderr)
     
-    # Built-in arts
     builtin_arts = {
+        'cat': r"""
+  /\_/\  
+ ( o.o ) 
+  > ^ <  
+ /  _  \ 
+(____|____)""",
         'tux': r"""
    .--.   
   |o_o |  
@@ -91,41 +84,29 @@ def get_ascii_art(config):
 (|     | )
 /'\_   _/`\
 \___)=(___/""",
-        'cat': r"""
-  /\_/\  
- ( o.o ) 
-  > ^ <  
- /  _  \ 
-(____|____)""",
         'pyfetch': r"""
      ----    
     |*   |_____
-  __|___       |
+  _____        |
  |       ______|
  |_____|  *|   
-       |___|""",
-        'example': r"""
-        Hello!
-        """
+       |___|"""
     }
-    return builtin_arts.get(style, builtin_arts['tux'])
+    return builtin_arts.get(style, builtin_arts['cat'])
 
 def get_username():
-    """Get current username"""
     try:
         return pwd.getpwuid(os.getuid()).pw_name
     except:
         return os.getlogin()
 
 def get_kernel():
-    """Get cleaned kernel version"""
     version = platform.uname().release
     if "SMP" in version:
         return version.split("SMP")[0] + "SMP"
     return version.split("#")[0] + "#" + version.split("#")[1].split()[0] if "#" in version else version
 
 def get_os_info():
-    """Get OS information"""
     try:
         import distro
         return distro.name(pretty=True)
@@ -133,7 +114,6 @@ def get_os_info():
         return platform.system()
 
 def get_uptime():
-    """Get formatted uptime"""
     uptime = datetime.now() - datetime.fromtimestamp(psutil.boot_time())
     days = uptime.days
     hours, rem = divmod(uptime.seconds, 3600)
@@ -141,7 +121,6 @@ def get_uptime():
     return f"{days}d {hours}h {mins}m" if days else f"{hours}h {mins}m"
 
 def get_cpu_info():
-    """Get cleaned CPU information"""
     try:
         with open('/proc/cpuinfo', 'r') as f:
             for line in f:
@@ -153,24 +132,89 @@ def get_cpu_info():
     return platform.processor() or "Unknown"
 
 def get_memory_usage():
-    """Get memory usage with GB values"""
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
+def get_gpu_info():
+        """Get clean AMD Radeon RX 7600 identification"""
+        try:
+            # Method 1: Check sysfs for AMD card model
+            amd_sysfs_path = '/sys/class/drm/card0/device/product_name'
+            if os.path.exists(amd_sysfs_path):
+                with open(amd_sysfs_path, 'r') as f:
+                    gpu_name = f.read().strip()
+                    if '7600' in gpu_name:
+                        return "AMD Radeon RX 7600"
+    
+            # Method 2: Parse lspci output specifically for RX 7600
+            if shutil.which('lspci'):
+                lspci_output = os.popen('lspci -vnn').read()
+                for line in lspci_output.splitlines():
+                    if 'Radeon RX 7600' in line:
+                        return "AMD Radeon RX 7600"
+                    elif 'Navi 33' in line and 'AMD' in line:
+                        return "AMD Radeon RX 7600"
+    
+            # Method 3: Clean glxinfo output
+            if shutil.which('glxinfo'):
+                glx_output = os.popen('glxinfo | grep -i "OpenGL renderer"').read()
+                if 'Radeon RX 7600' in glx_output:
+                    return "AMD Radeon RX 7600"
+                elif 'Navi 33' in glx_output and 'AMD' in glx_output:
+                    return "AMD Radeon RX 7600"
+    
+        except Exception as e:
+            print(f"Error getting GPU info: {e}", file=sys.stderr)
+        
+        # Fallback if specific detection fails
+        return "AMD Graphics"
+
 def print_title(config, width):
-    """Print formatted title"""
     title = "PyFetch - System Information"
     print(colorize(f"\n{title.center(width, ' ')}\n", config['format']['title_color']))
     print(colorize("-" * width, config['format']['title_color']))
 
+def import_art(art_path):
+    try:
+        with open(art_path, 'r') as f:
+            art_content = f.read().strip()
+        
+        config_path = os.path.join(Path.home(), '.config', 'pyfetch', 'config.ini')
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        
+        config = configparser.ConfigParser()
+        if os.path.exists(config_path):
+            config.read(config_path)
+        
+        if not config.has_section('ascii'):
+            config.add_section('ascii')
+        
+        config.set('ascii', 'art_style', 'custom')
+        config.set('ascii', 'custom_art', art_content)
+        
+        with open(config_path, 'w') as f:
+            config.write(f)
+        
+        print(f"Successfully imported ASCII art from {art_path}")
+        return True
+    except Exception as e:
+        print(f"Error importing art: {e}", file=sys.stderr)
+        return False
+
 def main():
+    parser = argparse.ArgumentParser(description='PyFetch - System information tool')
+    parser.add_argument('--import-art', metavar='FILE', help='Import custom ASCII art from file')
+    args = parser.parse_args()
+    
+    if args.import_art:
+        import_art(args.import_art)
+        return
+    
     config = load_config()
     max_width = int(config['format'].get('max_width', '60'))
     
-    # Print title
     print_title(config, max_width)
     
-    # Collect system info
     info = {}
     if config['display'].getboolean('show_username', True):
         info["Username"] = get_username()
@@ -186,6 +230,8 @@ def main():
         info["CPU"] = get_cpu_info()
     if config['display'].getboolean('show_memory', True):
         info["Memory"] = get_memory_usage()
+    if config['display'].getboolean('show_gpu', True):
+        info["GPU"] = get_gpu_info()
     if config['display'].getboolean('show_shell', True):
         info["Shell"] = os.path.basename(os.getenv('SHELL', 'unknown'))
     if config['display'].getboolean('show_python', True):
