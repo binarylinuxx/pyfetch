@@ -17,6 +17,10 @@ cd pyfetch
 sudo make install
 ```
 
+> [!NOTE]
+> IM UPDATING MAKEFILE MORE THAN PKGBUILD SO IF YOU WANT ALLWAYS ROLLING
+> BETTER OPTION INSTALL WITH MAKE.
+
 # SCREENS
 ![fetch](fetch.png)
 
