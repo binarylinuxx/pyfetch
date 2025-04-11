@@ -144,11 +144,14 @@ def get_memory_usage():
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
-result = subprocess.run(['wmic', 'path', 'win32_VideoController', 'get', 'name'], capture_output=True, text=True)
+result = subprocess.run(['lspci'], capture_output=True, text=True)
 
 def get_gpu_info():
     try:
-        result.stdout
+        for line in result.stdout.split('\n'):
+    if 'VGA compatible controller' in line or '3D controller' in line:
+        name = line.split(':')[-1].strip()
+        print(name)
 
     except Exception as e:
         print(f"Error getting GPU info: {e}", file=sys.stderr)
