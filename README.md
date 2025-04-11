@@ -1,5 +1,5 @@
 # PYFETCH
-a python a lightweight system-fetch tool that fully python independent from other LANGS LIKE JAVA, c, ETC. ANYTHING PYTHON.
+a python a lightweight system-fetch tool that fully python independent from other LANGS LIKE JAVA, c, ETC. ANYTHING WRITTEN PYTHON.
 
 # TREE
 
@@ -64,16 +64,16 @@ CURRENTLY 4 ASSETS READY FOR YOU:
 ---------------------------------
 
 **CAT**
-![cat](cat.png)
+![cat](https://github.com/binarylinuxx/screens/blob/screens/pyfetch/cat.png)
 
 **TUX**
-![tux](tux.png)
+![tux](https://github.com/binarylinuxx/screens/blob/screens/pyfetch/tux.png)
 
 **PYTHON CAT**
-![catt_py](catt_py.png)
+![catt_py](https://github.com/binarylinuxx/screens/blob/screens/pyfetch/catt_py.png)
 
 **AND THE FAMILIAR PYTHON**
-![fetch1](fetch.png)
+![fetch1](https://github.com/binarylinuxx/screens/blob/screens/pyfetch/fetch.png)
 
 **CUSTOM**
 ASCII WILL REQUIRE SOME PYTHON SKILLS TO EDIT THE SOURCES AND RECOMPIE EVERY TIME YOU ADDING NEW
