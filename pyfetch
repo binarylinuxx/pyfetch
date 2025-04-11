@@ -144,18 +144,17 @@ def get_memory_usage():
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
-gpus = GPUInfo.get_info()
-
 def get_gpu_info():
+
      gpus = GPUInfo.get_info()
 
     if gpus:
         gpu_names = [gpu['GPUName'] for gpu in gpus]
         return gpu_names
     else:
-        return ["GPU CANNOT BE FINDED"]
+        return ["GPU CANNOT BE FOUND"]
 
-gpu_names = get_gpu_names()
+gpu_names = get_gpu_info()
 for gpu in gpu_names:
     print(f"{gpu}")
 
