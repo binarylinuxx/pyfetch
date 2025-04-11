@@ -107,7 +107,7 @@ def get_ascii_art(config):
    /********\\  
   /__________\\  
        ||  
-       ||  
+       ||"""
     }
     return builtin_arts.get(style, builtin_arts['cat'])
 
