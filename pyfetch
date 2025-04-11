@@ -11,7 +11,7 @@ import sys
 import pwd
 import argparse
 import shutil
-import subprocess
+from gpuinfo import GPUInfo
 
 # Initialize colorama
 init()
@@ -144,28 +144,20 @@ def get_memory_usage():
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
-gpu_info_path = "/sys/class/drm"
+gpus = GPUInfo.get_info()
 
 def get_gpu_info():
-    if os.path.exists(gpu_info_path):
-        for entry in os.listdir(gpu_info_path):
-            if entry.startswith("card") and "-" not in entry:
-                vendor_path = os.path.join(gpu_info_path, entry, "device", "vendor")
-                device_path = os.path.join(gpu_info_path, entry, "device", "device")
-                
-                try:
-                    with open(vendor_path) as f:
-                        vendor = f.read().strip()
-                    with open(device_path) as f:
-                        device = f.read().strip()
+     gpus = GPUInfo.get_info()
 
-                    return f"Vendor ID: {vendor}, Device ID: {device}"
-                except Exception:
-                    continue
+if gpus:
+        gpu_names = [gpu['GPUName'] for gpu in gpus]
+        return gpu_names
+    else:
+        return ["GPU VANNOT BE FINDED"]
 
-    return "No Info about GPU"
-
-print(get_gpu_info())
+gpu_names = get_gpu_names()
+for gpu in gpu_names:
+    print(f"{gpu}")
 
 def print_title(config, width):
     title = "PyFetch - System Information"
