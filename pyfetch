@@ -99,6 +99,15 @@ def get_ascii_art(config):
  |       ______|
  |_____|  *|   
        |___|"""
+        'tree':r"""
+       /\\  
+      /**\\  
+     /****\\  
+    /******\\  
+   /********\\  
+  /__________\\  
+       ||  
+       ||  
     }
     return builtin_arts.get(style, builtin_arts['cat'])
 
