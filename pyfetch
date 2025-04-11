@@ -144,15 +144,27 @@ def get_memory_usage():
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
+gpu_info_path = "/sys/class/drm"
+
 def get_gpu_info():
-    try:
-        result = subprocess.run(['lspci'], capture_output=True, text=True)
-        for line in result.stdout.split('\n'):
-            if 'VGA compatible controller' in line or '3D controller' in line:
-                name = line.split(':', 2)[-1].strip()
-                print(name)
-    except Exception as e:
-        print(f"Error getting GPU NAME: {e}", file=sys.stderr)
+    if os.path.exists(gpu_info_path):
+        for entry in os.listdir(gpu_info_path):
+            if entry.startswith("card") and "-" not in entry:
+                vendor_path = os.path.join(gpu_info_path, entry, "device", "vendor")
+                device_path = os.path.join(gpu_info_path, entry, "device", "device")
+                
+                try:
+                    with open(vendor_path) as f:
+                        vendor = f.read().strip()
+                    with open(device_path) as f:
+                        device = f.read().strip()
+
+                    return f"Vendor ID: {vendor}, Device ID: {device}"
+
+    return "No Info about GPU"
+
+print(get_gpu_from_sys())
+
 def print_title(config, width):
     title = "PyFetch - System Information"
     print(colorize(f"\n{title.center(width, ' ')}\n", config['format']['title_color']))
