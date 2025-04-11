@@ -1,16 +1,26 @@
 # PYFETCH
 a python system-fetch tool that fully python based.
 
+# TREE
+
+- [INSTALL](https://github.com/binarylinuxx/pyfetch#install)
+  - [ARCH LINUX BASED](https://github.com/binarylinuxx/pyfetch#for-arch-linux-based)
+  - [OTHER DISTROS](https://github.com/binarylinuxx/pyfetch#other-linux-distros)
+- [SCREENS](https://github.com/binarylinuxx/pyfetch#screens)
+- [CONFIG](https://github.com/binarylinuxx/pyfetch#config)
+  - [CUSTOM ASCII](https://github.com/binarylinuxx/pyfetch#and-what-about-custom-ascii-arts)
+
 # INSTALL
 MAKE SURE **python-colorama**, **python-psutil** ARE INSTALLED.
-FOR ARCH-LINUX/BASED
+
+# FOR ARCH-LINUX-BASED
 ```
 git clone https://github.com/binarylinuxx/pyfetch
 cd pyfetch
 makepkg -si
 ```
 
-OTHER LINUX DISTROS
+ # OTHER LINUX DISTROS
 ```
 git clone https://github.com/binarylinuxx/pyfetch
 cd pyfetch
