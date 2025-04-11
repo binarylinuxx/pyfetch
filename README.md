@@ -1,5 +1,5 @@
 # PYFETCH
-a python system-fetch tool that fully python based.
+a python system-fetch tool that fully python independent from other LANGS LIKE JAVA, c, ETC. ANYTHING PYTHON.
 
 # TREE
 
