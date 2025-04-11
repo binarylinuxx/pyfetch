@@ -160,6 +160,8 @@ def get_gpu_info():
                         device = f.read().strip()
 
                     return f"Vendor ID: {vendor}, Device ID: {device}"
+                except Exception:
+                    continue
 
     return "No Info about GPU"
 
