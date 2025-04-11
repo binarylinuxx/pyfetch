@@ -144,34 +144,39 @@ def get_memory_usage():
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
 def get_gpu_info():
-    """Get clean AMD Radeon GPU identification without duplicates"""
-    try:
-        # Method 1: Check sysfs first
-        amd_sysfs_path = '/sys/class/drm/card0/device/product_name'
-        if os.path.exists(amd_sysfs_path):
-            with open(amd_sysfs_path, 'r') as f:
-                gpu_name = f.read().strip()
-                if 'Radeon RX' in gpu_name:
-                    clean_name = gpu_name.replace('(TM)', '').replace('(R)', '').strip()
-                    # Remove duplicate model numbers
-                    if '/' in clean_name:
-                        base_model = clean_name.split('/')[0]
-                        return base_model.split('RX')[0] + 'RX ' + base_model.split('RX')[1].split()[0]
-                    return clean_name
-
-        # Method 2: Parse lspci output
-        if shutil.which('lspci'):
-            lspci_output = os.popen('lspci -vnn | grep -i "Radeon RX"').read()
-            if lspci_output:
-                clean_line = lspci_output.split('Radeon RX')[-1].split('[')[0].strip()
-                # Take just the first model number if multiple listed
-                model = clean_line.split()[0].split('/')[0]
-                return f"AMD Radeon RX {model}"
-
-    except Exception as e:
-        print(f"Error getting GPU info: {e}", file=sys.stderr)
+        """Get clean GPU identification with fallback and smart AMD RX parsing"""
+        try:
+            # Check AMD sysfs path
+            amd_sysfs_path = '/sys/class/drm/card0/device/product_name'
+            if os.path.exists(amd_sysfs_path):
+                with open(amd_sysfs_path, 'r') as f:
+                    gpu_name = f.read().strip()
     
-    return "AMD Graphics"
+                    # If it contains multiple models, take the first relevant one
+                    if '/' in gpu_name:
+                        for part in gpu_name.split('/'):
+                            part = part.strip()
+                            if part.startswith("Radeon RX"):
+                                return part.replace('(TM)', '').replace('(R)', '')
+    
+                    return gpu_name.split('/')[0].strip().replace('(TM)', '').replace('(R)', '')
+    
+            # Fallback using lspci
+            if shutil.which('lspci'):
+                lspci_output = os.popen('lspci -nn | grep -Ei "VGA|3D"').read()
+                for line in lspci_output.splitlines():
+                    if 'Radeon RX' in line:
+                        match = line.split('Radeon RX')[-1].split('[')[0].split('/')[0].strip()
+                        return f"AMD Radeon RX {match}"
+                    elif 'NVIDIA' in line:
+                        return line.strip().split(':')[-1].strip()
+                    elif 'Intel' in line:
+                        return "Intel Graphics"
+    
+        except Exception as e:
+            print(f"GPU detection error: {e}", file=sys.stderr)
+    
+        return "Unknown GPU"
     
 def print_title(config, width):
     title = "PyFetch - System Information"
