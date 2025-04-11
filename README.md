@@ -38,7 +38,7 @@ sudo make install
 > BETTER OPTION INSTALL WITH MAKE.
 
 # SCREENS
-![fetch](fetch.png)
+![fetch](https://github.com/binarylinuxx/screens/blob/screens/pyfetch/fetch.png)
 
 # CONFIG
 YOU CAN CONFIGURE AS YOU WANT IN **~/.config/pyfetch/config.ini** LIKE:
