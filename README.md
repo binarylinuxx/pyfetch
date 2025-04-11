@@ -60,7 +60,7 @@ title_color = magenta
 
 # AND WHAT ABOUT CUSTOM ASCII ARTS?
 
-CURRENTLY 4 ASSETS READY FOR YOU:
+CURRENTLY 5 ASSETS READY FOR YOU:
 ---------------------------------
 
 **CAT**
@@ -71,6 +71,9 @@ CURRENTLY 4 ASSETS READY FOR YOU:
 
 **PYTHON CAT**
 ![catt_py](catt_py.png)
+
+**TREE**
+![tree](https://github.com/binarylinuxx/screens/blob/screens/pyfetch/image.webp)
 
 **AND THE FAMILIAR PYTHON**
 ![fetch1](fetch.png)
