@@ -109,7 +109,7 @@ def get_ascii_art(config):
        ||  
        ||"""
     }
-    return builtin_arts.get(style, builtin_arts['tree'])
+    return builtin_arts.get(style, builtin_arts['cat'])
 
 def get_username():
     try:
