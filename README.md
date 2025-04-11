@@ -11,7 +11,7 @@ a python system-fetch tool that fully python based.
   - [CUSTOM ASCII](https://github.com/binarylinuxx/pyfetch#and-what-about-custom-ascii-arts)
 
 # INSTALL
-MAKE SURE **python-colorama**, **python-psutil** ARE INSTALLED.
+MAKE SURE **python-colorama**, **python-psutil**, **pciutils** ARE INSTALLED.
 
 # FOR ARCH-LINUX-BASED
 ```
@@ -30,7 +30,6 @@ sudo make install
 > [!NOTE]
 > IM UPDATING MAKEFILE MORE THAN PKGBUILD SO IF YOU WANT ALWAYS ROLLING
 > BETTER OPTION INSTALL WITH MAKE.
-> GPU DETECTION WORKING ONLY FOR AMD GPUS!
 
 # SCREENS
 ![fetch](fetch.png)
