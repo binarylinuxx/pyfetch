@@ -4,7 +4,8 @@ a python a lightweight system-fetch tool that fully python independent from othe
 # TREE
 
 - [INSTALL](https://github.com/binarylinuxx/pyfetch#install)
-  - [ARCH LINUX BASED](https://github.com/binarylinuxx/pyfetch#for-arch-linux-based)
+  - [ARCH LINUX BASED WITH PKGBUILD](https://github.com/binarylinuxx/pyfetch#for-arch-linux-based-with-pkgbuild)
+  - [AUR](https://github.com/binarylinuxx/pyfetch#arch-user-repo)
   - [OTHER DISTROS](https://github.com/binarylinuxx/pyfetch#other-linux-distros)
 - [SCREENS](https://github.com/binarylinuxx/pyfetch#screens)
 - [CONFIG](https://github.com/binarylinuxx/pyfetch#config)
@@ -13,11 +14,16 @@ a python a lightweight system-fetch tool that fully python independent from othe
 # INSTALL
 MAKE SURE **python-colorama**, **python-psutil**, **pciutils** ARE INSTALLED.
 
-# FOR ARCH-LINUX-BASED
+# FOR ARCH-LINUX-BASED WITH PKGBUILD
 ```
 git clone https://github.com/binarylinuxx/pyfetch
 cd pyfetch
 makepkg -si
+```
+
+# ARCH USER REPO
+```
+yay -S py-fetch
 ```
 
  # OTHER LINUX DISTROS
