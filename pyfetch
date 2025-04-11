@@ -149,11 +149,11 @@ gpus = GPUInfo.get_info()
 def get_gpu_info():
      gpus = GPUInfo.get_info()
 
-if gpus:
+    if gpus:
         gpu_names = [gpu['GPUName'] for gpu in gpus]
         return gpu_names
     else:
-        return ["GPU VANNOT BE FINDED"]
+        return ["GPU CANNOT BE FINDED"]
 
 gpu_names = get_gpu_names()
 for gpu in gpu_names:
