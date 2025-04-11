@@ -3,7 +3,6 @@ import platform
 import os
 import socket
 import psutil
-import GPUtil
 from datetime import datetime
 import configparser
 from pathlib import Path
@@ -12,6 +11,7 @@ import sys
 import pwd
 import argparse
 import shutil
+import subprocess
 
 # Initialize colorama
 init()
@@ -144,17 +144,11 @@ def get_memory_usage():
     mem = psutil.virtual_memory()
     return f"{mem.percent}% ({round(mem.used/(1024**3),1)}GB/{round(mem.total/(1024**3),1)}GB)"
 
-gpus = GPUtil.getGPUs()
-gpus = []
-
-for gpu in gpus:
-    gpu_name = gpu.name
-    
-    gpus.append((gpu_name))
+result = subprocess.run(['wmic', 'path', 'win32_VideoController', 'get', 'name'], capture_output=True, text=True)
 
 def get_gpu_info():
     try:
-                gpu_name = list_gpu
+        result.stdout
 
     except Exception as e:
         print(f"Error getting GPU info: {e}", file=sys.stderr)
