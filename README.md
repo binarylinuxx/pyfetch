@@ -2,7 +2,7 @@
 a python system-fetch tool that fully python based.
 
 # INSTALL
-MAKE SURE **python-colorama**, **python-psutil**, **GPUtil** ARE INSTALLED.
+MAKE SURE **python-colorama**, **python-psutil** ARE INSTALLED.
 FOR ARCH-LINUX/BASED
 ```
 git clone https://github.com/binarylinuxx/pyfetch
