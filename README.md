@@ -172,5 +172,7 @@ title_color = magenta
 NOW YOU CAN ENJOY YOUR CUSTOM ASCII YAY!
 
 # CURRENTLY AVILABLE ON
-[![AUR version](https://img.shields.io/aur/version/py-fetch?color=620F08&label=AUR)](https://aur.archlinux.org/packages/py-fetch)
+![AUR version](https://img.shields.io/aur/version/py-fetch?color=8BC34A&style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/binarylinuxx/pyfetch?style=flat-square&color=03A9F4)
+![License](https://img.shields.io/github/license/binarylinuxx/pyfetch?style=flat-square&color=FF9800)
 
