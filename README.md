@@ -179,6 +179,6 @@ NOW YOU CAN ENJOY YOUR CUSTOM ASCII YAY!
 # MY SOCIAL ACCOUNTS
 [![](https://github.com/binarylinuxx/screens/blob/screens/social/yt.svg)](https://www.youtube.com/@Binarnik-Linux)
 
-[![](image_url)](link_url)
+[![](https://github.com/binarylinuxx/screens/blob/screens/social/tg.svg)](https://t.me/binarylinuxx)
 
 
