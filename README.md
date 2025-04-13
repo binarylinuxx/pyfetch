@@ -171,6 +171,6 @@ title_color = magenta
 ```
 NOW YOU CAN ENJOY YOUR CUSTOM ASCII YAY!
 
-# SUPPORTED DISTROS AND CURRENT STATE VERSION
-[![AUR version](https://img.shields.io/aur/version/py-fetch?color=ffb4a8&label=AUR)](https://aur.archlinux.org/packages/py-fetch)
+# CURRENTLY AVILABLE ON
+[![AUR version](https://img.shields.io/aur/version/py-fetch?color=620F08&label=AUR)](https://aur.archlinux.org/packages/py-fetch)
 
