@@ -177,6 +177,7 @@ NOW YOU CAN ENJOY YOUR CUSTOM ASCII YAY!
 [![License](https://img.shields.io/github/license/binarylinuxx/pyfetch?style=for-the-badge&color=131315)](https://github.com/binarylinuxx/pyfetch/blob/main/LICENSE)
 
 # MY SOCIAL ACCOUNTS
+[![](https://github.com/binarylinuxx/screens/blob/screens/social/yt.svg)](https://www.youtube.com/@Binarnik-Linux)
 
 [![](image_url)](link_url)
 
