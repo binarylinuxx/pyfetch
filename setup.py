@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pyfetch",
-    version="1.0.0",  # Обновите по необходимости
+    version="1.2.0",  # Обновите по необходимости
     author="Nir Rudov",
     description="Minimalist system info tool in Python",
     long_description=open("README.md").read(),
