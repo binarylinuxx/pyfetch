@@ -1,40 +1,42 @@
 {
-  description = "Minimalist system info tool in Python - pyfetch";
+  description = "Minimalist system info tool in Python";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = nixpkgs.legacyPackages.${system};
         python = pkgs.python3;
-        pyfetch = python.pkgs.buildPythonPackage {
+      in {
+        packages.default = python.pkgs.buildPythonPackage {
           pname = "pyfetch";
           version = "1.2.0";
-
           src = ./.;
 
-          nativeBuildInputs = with python.pkgs; [ setuptools ];
+          # Explicitly specify the package directory
+          pyproject = true;
+          pythonImportsCheck = [ ".pyfetch" ];
+
           propagatedBuildInputs = with python.pkgs; [
             psutil
             colorama
+            setuptools
           ];
 
-          doCheck = false;  # Set to true if you want to run tests
-          pythonImportsCheck = [ "pyfetch" ];
+          # Fix for hidden module directory
+          preBuild = ''
+            export PYTHONPATH=$PYTHONPATH:${builtins.toString ./.}
+          '';
+
+          meta = with pkgs.lib; {
+            description = "Minimalist system info tool in Python";
+            homepage = "https://github.com/binarylinuxx/pyfetch";
+            license = licenses.mit;
+          };
         };
-      in {
-        packages.default = pyfetch;
-        apps.default = {
-          type = "app";
-          program = "${pyfetch}/bin/pyfetch";
-        };
-        devShells.default = pkgs.mkShell {
-          buildInputs = [ python pkgs.python3Packages.psutil pkgs.python3Packages.colorama ];
-        };
-      }
-    );
+      });
 }
