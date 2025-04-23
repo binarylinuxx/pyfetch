@@ -10,17 +10,24 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        python = pkgs.python311;
+        python-with-packages = pkgs.python3.withPackages (ps: [
+          ps.psutil
+          ps.colorama
+        ]);
       in {
-        packages.default = python.pkgs.buildPythonPackage {
-          pname = "pyfetch";
+        packages.default = pkgs.stdenv.mkDerivation {
+          name = "pyfetch";
           version = "1.2.0";
           src = ./.;
-          format = "pyproject";
-          propagatedBuildInputs = with python.pkgs; [
-            psutil
-            colorama
-          ];
+          
+          buildInputs = [ python-with-packages ];
+          
+          installPhase = ''
+            mkdir -p $out/bin
+            cp ${./pyfetch.py} $out/bin/pyfetch
+            chmod +x $out/bin/pyfetch
+            patchShebangs $out/bin/pyfetch
+          '';
         };
 
         apps.default = {
@@ -28,12 +35,8 @@
           program = "${self.packages.${system}.default}/bin/pyfetch";
         };
 
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            python
-            python.pkgs.psutil
-            python.pkgs.colorama
-          ];
+        devShell = pkgs.mkShell {
+          packages = [ python-with-packages ];
         };
       });
 }
