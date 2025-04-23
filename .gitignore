@@ -1,0 +1,10 @@
+# Nix build artifacts
+/result
+
+# Python build artifacts
+*.pyc
+__pycache__/
+
+# Development files
+flake.lock
+EOF

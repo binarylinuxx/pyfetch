@@ -17,9 +17,9 @@ setup(
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-        "pyfetch = pyfetch.pyfetch:main",  # Changed from 'pyfetch:main'
-    ],
-   },
+            "pyfetch = .pyfetch:main",  # Fixed path to match new location
+        ],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
