@@ -10,33 +10,20 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        python = pkgs.python3;
       in {
-        packages.default = python.pkgs.buildPythonPackage {
+        packages.default = pkgs.python3.pkgs.buildPythonApplication {
           pname = "pyfetch";
           version = "1.2.0";
           src = ./.;
+          format = "pyproject";
 
-          # Explicitly specify the package directory
-          pyproject = true;
-          pythonImportsCheck = [ ".pyfetch" ];
-
-          propagatedBuildInputs = with python.pkgs; [
+          propagatedBuildInputs = with pkgs.python3.pkgs; [
             psutil
             colorama
-            setuptools
           ];
 
-          # Fix for hidden module directory
-          preBuild = ''
-            export PYTHONPATH=$PYTHONPATH:${builtins.toString ./.}
-          '';
-
-          meta = with pkgs.lib; {
-            description = "Minimalist system info tool in Python";
-            homepage = "https://github.com/binarylinuxx/pyfetch";
-            license = licenses.mit;
-          };
+          # No special handling needed for _pyfetch
+          pythonImportsCheck = ["_pyfetch"];
         };
       });
 }

@@ -17,7 +17,7 @@ setup(
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "pyfetch = .pyfetch:main",  # Fixed path to match new location
+            "pyfetch = _pyfetch:main",  # Fixed path to match new location
         ],
     },
     classifiers=[
