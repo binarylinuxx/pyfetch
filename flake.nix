@@ -10,19 +10,25 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        python = pkgs.python3;
       in {
-        packages.default = pkgs.python3.pkgs.buildPythonApplication {
+        packages.default = python.pkgs.buildPythonPackage {
           pname = "pyfetch";
           version = "1.2.0";
           src = ./.;
           format = "pyproject";
 
-          propagatedBuildInputs = with pkgs.python3.pkgs; [
+          nativeBuildInputs = with python.pkgs; [
+            setuptools
+            wheel
+          ];
+
+          propagatedBuildInputs = with python.pkgs; [
             psutil
             colorama
           ];
 
-          # No special handling needed for _pyfetch
+          # For _pyfetch package structure
           pythonImportsCheck = ["_pyfetch"];
         };
       });
