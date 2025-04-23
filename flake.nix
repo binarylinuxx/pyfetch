@@ -1,44 +1,40 @@
 {
-  description = "PyFetch - Minimalist system info tool";
+  description = "Minimalist system info tool in Python - pyfetch";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        pythonEnv = pkgs.python3.withPackages (ps: [
-          ps.psutil
-          ps.colorama
-          ps.distro  # Добавляем недостающую зависимость
-        ]);
-      in {
-        packages.default = pkgs.stdenv.mkDerivation {
-          name = "pyfetch";
-          version = "1.0.0";
-          src = ./.;
-          
-          nativeBuildInputs = [ pkgs.makeWrapper ];
-          buildInputs = [ pythonEnv ];
-          
-          installPhase = ''
-            mkdir -p $out/bin
-            install -Dm755 ${./pyfetch.py} $out/bin/pyfetch
-            wrapProgram $out/bin/pyfetch \
-              --prefix PATH : ${pkgs.lib.makeBinPath [ pythonEnv ]}
-          '';
-        };
+        pkgs = import nixpkgs { inherit system; };
+        python = pkgs.python3;
+        pyfetch = python.pkgs.buildPythonPackage {
+          pname = "pyfetch";
+          version = "1.2.0";
 
+          src = ./.;
+
+          nativeBuildInputs = with python.pkgs; [ setuptools ];
+          propagatedBuildInputs = with python.pkgs; [
+            psutil
+            colorama
+          ];
+
+          doCheck = false;  # Set to true if you want to run tests
+          pythonImportsCheck = [ "pyfetch" ];
+        };
+      in {
+        packages.default = pyfetch;
         apps.default = {
           type = "app";
-          program = "${self.packages.${system}.default}/bin/pyfetch";
+          program = "${pyfetch}/bin/pyfetch";
         };
-
         devShells.default = pkgs.mkShell {
-          packages = [ pythonEnv ];
+          buildInputs = [ python pkgs.python3Packages.psutil pkgs.python3Packages.colorama ];
         };
-      });
+      }
+    );
 }
