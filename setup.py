@@ -17,9 +17,9 @@ setup(
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "pyfetch = pyfetch:main",  # Замените `pyfetch.main` на реальный модуль
-        ],
-    },
+        "pyfetch = pyfetch.main:main",  # Changed from 'pyfetch:main'
+    ],
+   },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
