@@ -3,8 +3,7 @@ pyfetch = python.pkgs.buildPythonPackage {
   version = "1.2.0";
   src = ./.;
   
-  # Add this to specify the package is in the pyfetch directory
-  pyproject = true;
+  format = "pyproject";  # Changed from pyproject = true;
   
   nativeBuildInputs = with python.pkgs; [ setuptools ];
   propagatedBuildInputs = with python.pkgs; [
