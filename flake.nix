@@ -16,7 +16,7 @@
           pname = "pyfetch";
           version = "1.2.0";
           src = ./.;
-          format = "pyproject";
+          # format = "setuptools"; # Optional, inferred from setup.py
 
           nativeBuildInputs = with python.pkgs; [
             setuptools
@@ -28,7 +28,6 @@
             colorama
           ];
 
-          # For _pyfetch package structure
           pythonImportsCheck = ["_pyfetch"];
         };
       });
