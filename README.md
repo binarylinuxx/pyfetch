@@ -6,6 +6,7 @@ a python a lightweight system-fetch tool that fully python independent from othe
 - [INSTALL](https://github.com/binarylinuxx/pyfetch#install)
   - [ARCH LINUX BASED WITH PKGBUILD](https://github.com/binarylinuxx/pyfetch#for-arch-linux-based-with-pkgbuild)
   - [AUR](https://github.com/binarylinuxx/pyfetch#arch-user-repo)
+  - [NIX/FLAKES](https://github.com/binarylinuxx/pyfetch#nix)
   - [OTHER DISTROS](https://github.com/binarylinuxx/pyfetch#other-linux-distros)
 - [SCREENS](https://github.com/binarylinuxx/pyfetch#screens)
 - [CONFIG](https://github.com/binarylinuxx/pyfetch#config)
@@ -33,6 +34,11 @@ nix build
 **ONLY RUN NOT INSTALL**
 ```
 nix run github:binarylinuxx/pyfetch
+```
+
+**BUILD AVOIDING CLONING REPO**
+```
+nix build github:binarylinuxx/pyfetch
 ```
 
 # ARCH USER REPO
