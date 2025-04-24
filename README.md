@@ -21,6 +21,20 @@ cd pyfetch
 makepkg -si
 ```
 
+# NIX
+> [!NOTE]
+> im have lack of knowledge in nix so im can`t create some home-manager module only building localy
+
+**BUILD**
+```
+nix build
+```
+
+**ONLY RUN NOT INSTALL**
+```
+nix run github:binarylinuxx/pyfetch
+```
+
 # ARCH USER REPO
 ```
 yay -S py-fetch
